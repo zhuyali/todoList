@@ -1,0 +1,12 @@
+{
+  "name": "todoList",
+  "version": "1.0.0",
+  "description": "record todos",
+  "main": "main.js",
+  "keywords": [
+    "electron",
+    "todoList"
+  ],
+  "author": "Julia",
+  "license": "MIT"
+}

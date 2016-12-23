@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>todoList</title>
+    <link rel="stylesheet" type="text/css" href="./public/css/index.css">
+    <script src="./public/javascript/jquery.js"></script>
+    <script src="./public/javascript/handlebars.js"></script>
+    <script src="./public/javascript/index.js"></script>
+  </head>
+  <body>
+
+    <div id="container">
+
+      <div class="nav">
+      </div>
+
+      <script id="template" type="text/x-handlebars-template">
+        {{#each times}}
+          <dl>
+            <dt class="time">{{this}}</dt>
+          </dl>
+        {{/each}}
+      </script>
+
+      <div id="unfinished">
+        <label>未完成：</label>
+        <ul id="todoing">
+          <li class="add">⊕ 点击添加</li>
+        </ul>
+      </div>
+      <div id="finished">
+        <label>已完成：</label>
+        <ul id="todoed">
+        </ul>
+      </div>
+
+    </div>
+
+  </body>
+</html>

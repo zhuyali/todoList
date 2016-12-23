@@ -1,0 +1,84 @@
+html {
+  height: 95%;
+}
+
+body {
+  position: relative;
+  height: 100%;
+}
+
+#container {
+  height: 100%;
+}
+
+#unfinished, #finished {
+  float: left;
+  width: 38%;
+  height: 96.2%;
+  padding: 10px;
+  border-style: solid;
+  border-width: 2px;
+  border-right-color: #CDB38B;
+  border-left-color: #CDB38B;
+  border-top-color: #CDB38B;
+  border-bottom-color: #CDB38B;
+}
+
+#todoing, #todoed {
+  padding: 5px;
+  margin: 5px;
+  list-style-type: none;
+  width: 95%;
+  height: 93%;
+  font-size: 14px;
+}
+
+label {
+  display: block;
+  padding: 10px;
+  background-color: #CDB38B;
+}
+
+input {
+  outline: medium;
+  padding-left: 20px;
+  width: 95%;
+  border-style: none;
+  font-size: 15px;
+}
+
+li {
+  margin-top: 8px;
+}
+
+.add {
+  font-size: 14px;
+  color: #CDCDC1;
+}
+
+.nav {
+  float: left;
+  width: 18%;
+  overflow: visible !important;
+  height: 100%;
+  background-color: #CDB38B;
+}
+
+.nav dt {
+  padding-left: 20px;
+  background-repeat: no-repeat;
+  background-position: 10px center;
+  font-weight:bold;
+  font-size: 15px;
+  line-height: 30px;
+  cursor: pointer;
+  color: #383838;
+}
+
+.nav dd {
+  color: #191970;
+  font-weight:bold;
+  line-height: 20px;
+  font-size: 14px;
+  cursor: pointer;
+}
