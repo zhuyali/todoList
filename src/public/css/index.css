@@ -24,7 +24,7 @@ body {
   border-bottom-color: #CDB38B;
 }
 
-#todoing, #todoed {
+#currentList {
   padding: 5px;
   margin: 5px;
   list-style-type: none;
@@ -33,18 +33,38 @@ body {
   font-size: 14px;
 }
 
+#totalList {
+  padding: 5px;
+  margin: 5px;
+  list-style-type: none;
+  width: 95%;
+  height: 85%;
+  font-size: 14px;
+}
+
+.totalItem {
+  cursor: pointer;
+}
+
 label {
   display: block;
   padding: 10px;
   background-color: #CDB38B;
 }
 
-input {
-  outline: medium;
-  padding-left: 20px;
-  width: 95%;
-  border-style: none;
+#input {
+  height: 25px;
+  width: 80%;
   font-size: 15px;
+}
+
+button {
+  padding: 8px;
+  height: 32px;
+  width: 15%;
+  border-radius: 3px;
+  background-color: #CDB38B;
+  font-size: 13px;
 }
 
 li {
