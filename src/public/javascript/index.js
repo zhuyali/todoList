@@ -1,115 +1,232 @@
-'use strict'
+'use strict';
 
-var getCurrentTime = function() {
-  var date = new Date;
-  var year = date.getFullYear();
-  var month = date.getMonth() + 1;
-  var currentTime = year + '年' + month + '月';
-  return currentTime;
+function Model(id) {
+  this.id = id;
+  this.data = null;
+  this.init();
 }
 
-/*
- * 获取月份时间
- * { key: 'times',
- *   value: '2016年12月 2016年11月...'}
- */
-var getTime = function() {
-  var currentTime = getCurrentTime();
-  var times = window.localStorage.getItem('times');
+Model.prototype.init = function() {
+  this.data = JSON.parse(window.localStorage.getItem(this.id));
+};
 
-  if (times === null) {
-    window.localStorage.setItem('times', currentTime);
-  } else if (times && times.indexOf(currentTime) == -1) {
-    window.localStorage.setItem('times', times + ' ' + currentTime);
+Model.prototype.get = function() {
+  return this.data;
+};
+
+Model.prototype.set = function(data) {
+  this.data = data;
+  window.localStorage.setItem(this.id, JSON.stringify(data));
+};
+
+var dateModel = new Model('date');
+var totalModel = new Model('total');
+var currentModel = new Model('current');
+var historyModel = new Model('history');
+var records = {};
+
+$(document).ready(function () {
+
+  function renderInit() {
+    var lastDate = null;
+    if (dateModel.get()) {
+      lastDate = new Date(dateModel.get());
+    }
+    var currentDate = new Date;
+
+    if (lastDate) {
+      var lastYear = lastDate.getFullYear();
+      var currentYear = currentDate.getFullYear();
+      var lastWeek = getYearWeek(lastYear, lastDate.getMonth(), lastDate.getDate());
+      var currentWeek = getYearWeek(currentYear, currentDate.getMonth(), currentDate.getDate());
+
+      if (!totalModel.get()) {
+        totalModel.set([]);
+      }
+      if (!currentModel.get()) {
+        currentModel.set([]);
+      }
+      if (!historyModel.get()) {
+        historyModel.set([]);
+      }
+
+      var history = historyModel.get();
+      var current = currentModel.get();
+
+      if (currentYear !== lastYear ) {
+        file(current, lastDate);
+      } else {
+        if (currentWeek !== lastWeek) {
+          file(current, lastDate);
+        }
+      }
+    }
+    //file(currentModel.get(), lastDate);
+    dateModel.set(currentDate);
+    renderDirectory();
+    renderReverse(totalModel, 'totalItem', $('#totalList'));
+    renderReverse(currentModel, 'currentItem', $('#currentList'));
+  }
+  renderInit();
+
+  function file(items, time) {
+    var data = {
+      times: time,
+      items: []
+    };
+    var total = totalModel.get();
+    var current = currentModel.get();
+    var history = historyModel.get();
+
+    items.forEach(function (item, index) {
+      if (item.finished) {
+        data.items.push(item);
+      } else {
+        total.push(item.value);
+      }
+    });
+
+    if (data.items.length) {
+      history.push(data);
+      historyModel.set(history);
+    }
+    current.length = 0;
+    currentModel.set(current);
+    totalModel.set(total);
   }
 
-  return window.localStorage.getItem('times');
-}
-
-/* 获取所有todo标题
- * { key: titles,
- *   value: {key: '2016年12月',value: ['todos']}, ...}
- */
-var getTitle = function() {
-  var titles = window.localStorage.getItem('titles');
-  if (titles === null) {
-    window.localStorage.setItem('titles', '');
+  function renderDirectory() {
+    var history = historyModel.get();
+    var navTime = [];
+    history.forEach(function (data) {
+      var time = new Date(data.times).getFullYear() + '年' + (new Date(data.times).getMonth() + 1) + '月';
+      if (navTime.indexOf(time) === -1) {
+        navTime.push(time);
+      }
+    });
+    var data = {times: navTime};
+    if (history) {
+      var source = $('#timeTemplate').html();
+      var template = Handlebars.compile(source);
+      $('.nav')[0].innerHTML = template(data);
+    }
+    for (var i = 0; i < $('.time').length; i++) {
+      $('.time')[i].after($('<script class="itemTemplate" type="text/x-handlebars-template" index="' + i + '">{{#each titles}}<dd>{{this}}</dd>{{/each}}</script>')[0]);
+    }
   }
-  var titleObj = eval('(' + titles +')');
-  return titleObj;
-}
 
-var renderNav = function(data) {
-  var source = $('#template').html();
-  var template = Handlebars.compile(source);
-  document.getElementsByClassName('nav')[0].innerHTML = template(data);
-}
+  function renderReverse(model, className, ele) {
+    if (!model.get()) {
+      model.set([]);
+    }
+    var data = model.get().slice(0);
+    ele.html('');
+    data.reverse().forEach(function(item, index) {
+      ele.append('<li class="' + className + '" data-index="' + (data.length - index - 1) + '">' +(JSON.stringify(model) === JSON.stringify(currentModel)? '<input class="checkbox" type="checkbox"' + (item.finished ? 'checked' : '') + (item.disabled ? 'disabled' : '') + ' data-index="' + (data.length - index - 1) + '">' + item.value : '' + item) + '</li>')
+    });
+  }
 
-var record = {};
-var times = getTime();
-var titles = getTitle();
-var currentTitle = null;
-var data = {times : times.split(' ')}
+  function getYearWeek(year, month, date) {
+    var date = new Date(year, parseInt(month) - 1, date);
+    var startDate = new Date(year, 0, 1);
+    var temp = Math.round((date.valueOf() - startDate.valueOf()) / 86400000);
+    return Math.ceil((temp + ((startDate.getDay() + 1) - 1)) / 7);
+  };
 
-window.onload = function() {
-  //render nav bar
-  renderNav(data);
-
-  //点击时间时，列表toggle
   $('body').delegate('.time', 'click', function(e) {
-    var key = e.target.innerHTML;
-    console.log(key);
-    console.log(record);
-    if (record[`${key}`] === true) {
-      record[`${key}`] = false;
-      //remove
+    var index = $(this)[0].innerHTML;
+    var titles = [];
+    var navTime = $(this).html();
+    if (records[index + '']) {
+      records[index + ''] = false;
+      var parent = $(this)[0].parentNode;
+      var childs = parent.childNodes;
+      for(var i = 2; i < childs.length - 2; i++) {
+        parent.removeChild(childs[i])
+      }
     } else {
-      record[`${key}`] = true;
-      for (var item in titles[`${key}`]) {
-        var ele = $('<dd></dd>').text(titles[`${key}`][item]);
-        e.target.after(ele[0]);
+      var history = historyModel.get();
+      history.forEach(function(item) {
+        var time = new Date(item.times);
+        if (time.getFullYear() === parseInt(navTime.substr(0, navTime.indexOf('年'))) && time.getMonth() + 1 === parseInt(navTime.substr(navTime.indexOf('年') + 1, navTime.indexOf('月')))) {
+          titles.push(time.getFullYear() + '.' + (time.getMonth() + 1) + '.' + time.getDate());
+        }
+      });
+      records[index + ''] = true;
+      var data = {titles: titles};
+      for(var i = 0; i < $('.time').length; i++) {
+        if ($('.time')[i].innerHTML === $(this)[0].innerHTML) {
+          for(var j = 0; j < $('.itemTemplate').length; j++) {
+            if (parseInt($('.itemTemplate')[j].getAttribute('index')) === i) {
+              var source = $('.itemTemplate')[j].innerHTML;
+              var template = Handlebars.compile(source);
+              var ele = $(template(data));
+      $(this)[0].after(ele[0]);
+            }
+          }
+        }
       }
     }
+    e.stopPropagation();
   });
 
-  //点击添加时，自动在前面添加一行，并且自动聚焦
-  $('body').delegate('.add', 'click', function(e) {
-    var ele = $('<input type="text"></input>').text('');
-    e.target.before(ele[0]);
-    ele[0].focus();
-  });
-
-  //点击标题时，对应变化todoList
   $('body').delegate('dd', 'click', function(e) {
-    currentTitle = e.target.innerHTML;
+    var history = historyModel.get();
+    var items = [];
+    var title = $(this)[0].innerHTML;
+    history.forEach(function(item) {
+      var time = new Date(item.times);
+      if (time.getFullYear() + '.' + (time.getMonth() + 1) + '.' + time.getDate() === title) {
+        items = item.items;
+        return false;
+      }
+    });
+    var data = {items: items};
+    var source = $('#template').html();
+    var template = Handlebars.compile(source);
+    $('#currentList')[0].innerHTML = template(data);
+    e.stopPropagation();
   });
 
-  //按下回车键时，默认新增一行
-
-  //在每一行前面增加checkbox，选择后进入已完成列表
-
-  //按下保存键时，保存当前todoList
-  $(document).keydown(function(e) {
-    if (e.metaKey == true && e.keyCode == 83) {
-      var todoList = {
-        unfinished: [],
-        finished: []
-      };
-      $('#todoing').find('input').each(function () {
-        todoList.unfinished.push(this.value);
-      });
-      $('#todoed').find('li').each(function () {
-        todoList.finished.push(this.innerHTML);
-      });
-
-      if (currentTitle === null) {
-        var date = new Date;
-        currentTitle = date.getMonth() + '.' + date.getDay();
-      }
-      var content = JSON.stringify(todoList);
-      console.log(content);
-      //window.localStorage.setItem('')
-      return false;
+  $('body').delegate('#submit', 'click', function(e) {
+    var input = $('#input').val().trim();
+    $('#input').val('');
+    if (input.length) {
+      var total = totalModel.get();
+      total.push(input);
+      totalModel.set(total);
+      renderReverse(totalModel, 'totalItem', $('#totalList'));
     }
   });
-}
+
+  $('body').delegate('.nav', 'click', function(e) {
+    renderReverse(currentModel, 'currentItem', $('#currentList'));
+  });
+
+  $('body').delegate('.totalItem', 'click', function(e) {
+    var node = $(e.target);
+    var currentItem = {
+      finished: false,
+      disabled: false,
+      value: node.html()
+    }
+    var total = totalModel.get();
+    total.splice(parseInt(node.data('index')), 1);
+    totalModel.set(total);
+    renderReverse(totalModel, 'totalItem', $('#totalList'));
+
+    var current = currentModel.get();
+    current.push(currentItem);
+    currentModel.set(current);
+    renderReverse(currentModel, 'currentItem', $('#currentList'));
+  });
+
+  $('body').delegate('.checkbox', 'change', function(e) {
+    var node = $(e.target);
+    var current = currentModel.get();
+
+    current[node.data('index')].finished = !!node.attr('checked');
+    currentModel.set(current);
+    renderReverse(currentModel, 'currentItem', $('#currentList'));
+  });
+});
