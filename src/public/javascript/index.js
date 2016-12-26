@@ -61,7 +61,6 @@ $(document).ready(function () {
         }
       }
     }
-    //file(currentModel.get(), lastDate);
     dateModel.set(currentDate);
     renderDirectory();
     renderReverse(totalModel, 'totalItem', $('#totalList'));
