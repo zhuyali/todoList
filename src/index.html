@@ -15,7 +15,7 @@
       <div class="nav">
       </div>
 
-      <script id="template" type="text/x-handlebars-template">
+      <script id="timeTemplate" type="text/x-handlebars-template">
         {{#each times}}
           <dl>
             <dt class="time">{{this}}</dt>
@@ -28,6 +28,13 @@
         <ul id="currentList">
         </ul>
       </div>
+
+      <script id="template" type="text/x-handlebars-template">
+        {{#each items}}
+          <li>{{this.value}}</li>
+        {{/each}}
+      </script>
+
       <div id="finished">
         <label>长期计划：</label>
         <ul id="totalList">

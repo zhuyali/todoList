@@ -62,6 +62,7 @@ $(document).ready(function () {
     }
     //file(currentModel.get(), lastDate);
     dateModel.set(currentDate);
+    renderDirectory();
     renderReverse(totalModel, 'totalItem', $('#totalList'));
     renderReverse(currentModel, 'currentItem', $('#currentList'));
   }
@@ -83,8 +84,11 @@ $(document).ready(function () {
         total.push(item.value);
       }
     });
-    history.push(data);
-    historyModel.set(history);
+
+    if (data.items.length) {
+      history.push(data);
+      historyModel.set(history);
+    }
     current.length = 0;
     currentModel.set(current);
     totalModel.set(total);
@@ -92,9 +96,20 @@ $(document).ready(function () {
 
   function renderDirectory() {
     var history = historyModel.get();
-    var source = $('#template').html();
-    var template = Handlebars.compile(source);
-    document.getElementsByClassName('nav')[0].innerHTML = template(data);
+    var navTime = [];
+    history.forEach(function (data) {
+      var time = new Date(data.times).getFullYear() + '年' + new Date(data.times).getMonth() + '月';
+      if (navTime.indexOf(time) === -1) {
+        navTime.push(time);
+      }
+    });
+    var data = {times: navTime};
+    if (history) {
+      var source = $('#timeTemplate').html();
+      var template = Handlebars.compile(source);
+      $('.nav')[0].innerHTML = template(data);
+    }
+    $('.time').append('<script id="itemTemplate" type="text/x-handlebars-template">{{#each titles}}<dd>{{this}}</dd>{{/each}}</script>');
   }
 
   function renderReverse(model, className, ele) {
@@ -115,6 +130,39 @@ $(document).ready(function () {
     return Math.ceil((temp + ((startDate.getDay() + 1) - 1)) / 7);
   };
 
+  $('body').delegate('.time', 'click', function(e) {
+    var history = historyModel.get();
+    var titles = [];
+    history.forEach(function(item) {
+      var time = new Date(item.times);
+      titles.push(time.getFullYear() + '.' + time.getMonth() + '.' + time.getDate());
+    });
+    var data = {titles: titles};
+    var source = $('#itemTemplate').html();
+    var template = Handlebars.compile(source);
+    var ele = $(template(data));
+    $(this)[0].after(ele[0]);
+    e.stopPropagation();
+  });
+
+  $('body').delegate('dd', 'click', function(e) {
+    var history = historyModel.get();
+    var items = [];
+    var title = $(this)[0].innerHTML;
+    history.forEach(function(item) {
+      var time = new Date(item.times);
+      if (time.getFullYear() + '.' + time.getMonth() + '.' + time.getDate() === title) {
+        items = item.items;
+        return false;
+      }
+    });
+    var data = {items: items};
+    var source = $('#template').html();
+    var template = Handlebars.compile(source);
+    $('#currentList')[0].innerHTML = template(data);
+    e.stopPropagation();
+  });
+
   $('body').delegate('#submit', 'click', function(e) {
     var input = $('#input').val().trim();
     $('#input').val('');
@@ -124,6 +172,10 @@ $(document).ready(function () {
       totalModel.set(total);
       renderReverse(totalModel, 'totalItem', $('#totalList'));
     }
+  });
+
+  $('body').delegate('.nav', 'click', function(e) {
+    renderReverse(currentModel, 'currentItem', $('#currentList'));
   });
 
   $('body').delegate('.totalItem', 'click', function(e) {
