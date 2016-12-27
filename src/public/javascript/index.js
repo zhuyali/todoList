@@ -228,4 +228,10 @@ $(document).ready(function () {
     currentModel.set(current);
     renderReverse(currentModel, 'currentItem', $('#currentList'));
   });
+
+  $('#input').keydown(function(e) {
+    if(e.keyCode === 13){
+      $('#submit').click();
+    }
+  });
 });
