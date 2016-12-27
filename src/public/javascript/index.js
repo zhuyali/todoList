@@ -97,14 +97,14 @@ $(document).ready(function () {
   function renderDirectory() {
     var history = historyModel.get();
     var navTime = [];
-    history.forEach(function (data) {
-      var time = new Date(data.times).getFullYear() + '年' + (new Date(data.times).getMonth() + 1) + '月';
-      if (navTime.indexOf(time) === -1) {
-        navTime.push(time);
-      }
-    });
-    var data = {times: navTime};
     if (history) {
+      history.forEach(function (data) {
+        var time = new Date(data.times).getFullYear() + '年' + (new Date(data.times).getMonth() + 1) + '月';
+        if (navTime.indexOf(time) === -1) {
+          navTime.push(time);
+        }
+      });
+      var data = {times: navTime};
       var source = $('#timeTemplate').html();
       var template = Handlebars.compile(source);
       $('.nav')[0].innerHTML = template(data);
@@ -160,7 +160,7 @@ $(document).ready(function () {
               var source = $('.itemTemplate')[j].innerHTML;
               var template = Handlebars.compile(source);
               var ele = $(template(data));
-      $(this)[0].after(ele[0]);
+              $(this)[0].after(ele[0]);
             }
           }
         }
