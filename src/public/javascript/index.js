@@ -37,8 +37,8 @@ $(document).ready(function () {
     if (lastDate) {
       var lastYear = lastDate.getFullYear();
       var currentYear = currentDate.getFullYear();
-      var lastWeek = getYearWeek(lastYear, lastDate.getMonth(), lastDate.getDate());
-      var currentWeek = getYearWeek(currentYear, currentDate.getMonth(), currentDate.getDate());
+      var lastWeek = getYearWeek(lastYear, lastDate.getMonth() + 1, lastDate.getDate());
+      var currentWeek = getYearWeek(currentYear, currentDate.getMonth() + 1, currentDate.getDate());
 
       if (!totalModel.get()) {
         totalModel.set([]);
@@ -140,8 +140,9 @@ $(document).ready(function () {
       records[index + ''] = false;
       var parent = $(this)[0].parentNode;
       var childs = parent.childNodes;
-      for(var i = 2; i < childs.length - 2; i++) {
-        parent.removeChild(childs[i])
+      var length = childs.length;
+      for(var n = length - 3; n >= 2; n--) {
+        parent.removeChild(childs[n]);
       }
     } else {
       var history = historyModel.get();
@@ -160,7 +161,9 @@ $(document).ready(function () {
               var source = $('.itemTemplate')[j].innerHTML;
               var template = Handlebars.compile(source);
               var ele = $(template(data));
-              $(this)[0].after(ele[0]);
+              for (var k = 0; k < ele.length; k++) {
+                $(this)[0].after(ele[k]);
+              }
             }
           }
         }

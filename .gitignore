@@ -6,5 +6,7 @@ Thumbs.db
 coverage/
 .project
 build/
+cache/
+dist/
 *.sw*
 *.un~
