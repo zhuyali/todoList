@@ -31,6 +31,7 @@ body {
   width: 95%;
   height: 93%;
   font-size: 14px;
+  overflow: auto;
 }
 
 #totalList {
