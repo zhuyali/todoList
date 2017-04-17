@@ -1,6 +1,6 @@
 {
   "name": "todoList",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "record todos",
   "scripts": {
     "dist": "node ./node_modules/.bin/gulp dist",

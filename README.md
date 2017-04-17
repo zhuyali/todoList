@@ -4,7 +4,7 @@ Desktop todoList
 
 # dev
 
-npm run Dev
+npm run dev
 
 # build
 
