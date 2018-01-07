@@ -9,6 +9,7 @@ body {
 
 #container {
   height: 100%;
+  min-width: 831px;
 }
 
 #unfinished, #finished {
