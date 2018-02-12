@@ -2,17 +2,11 @@
   "name": "todoList",
   "version": "1.0.1",
   "description": "record todos",
-  "scripts": {
-    "dist": "node ./node_modules/.bin/gulp dist",
-    "dev": "node ./node_modules/.bin/gulp dev"
-  },
+  "main": "main.js",
   "keywords": [
     "electron",
     "todoList"
   ],
   "author": "Julia",
-  "license": "MIT",
-  "devDependencies": {
-    "electron-prebuilt": "^1.4.13"
-  }
+  "license": "MIT"
 }

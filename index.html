@@ -3,51 +3,44 @@
   <head>
     <meta charset="UTF-8">
     <title>todoList</title>
-    <link rel="stylesheet" type="text/css" href="./src/public/css/index.css">
-    <script src="./src/public/javascript/jquery.js"></script>
-    <script src="./src/public/javascript/handlebars.js"></script>
-    <script src="./src/public/javascript/index.js"></script>
+    <link rel="stylesheet" type="text/css" href="./public/css/index.css">
+    <link rel="icon" href="./public/img/icon.jpg">
+    <script src="./public/javascript/jquery.js"></script>
+    <script src="./public/javascript/handlebars.js"></script>
+    <script src="./public/javascript/index.js"></script>
   </head>
   <body>
-
-    <div class="github-ribbon">
-      <a target="_blank" href="//github.com/zhuyali/todoList">Fork me on GitHub</a>
-    </div>
-
     <div id="container">
-
       <div class="nav">
       </div>
-
-      <script id="timeTemplate" type="text/x-handlebars-template">
-        {{#each times}}
-          <dl>
-            <dt class="time">{{this}}</dt>
-          </dl>
-        {{/each}}
-      </script>
-
-      <div id="unfinished">
-        <label>近期计划：</label>
-        <ul id="currentList">
-        </ul>
+      <div class="content">
+        <script id="timeTemplate" type="text/x-handlebars-template">
+          {{#each times}}
+            <dl>
+              <dt class="time">{{this}}</dt>
+            </dl>
+          {{/each}}
+        </script>
+        <div class="plan-list">
+          <label>近期计划：</label>
+          <ul id="current-list" class="item-list">
+          </ul>
+        </div>
+        <script id="template" type="text/x-handlebars-template">
+          {{#each items}}
+            <li>{{this.value}}</li>
+          {{/each}}
+        </script>
+        <div class="plan-list">
+          <label>长期计划：</label>
+          <ul id="total-list" class="item-list">
+          </ul>
+          <div class="input-area">
+            <input id="input" type="text" />
+            <button id="submit">提交</button>
+          </div>
+        </div>    
       </div>
-
-      <script id="template" type="text/x-handlebars-template">
-        {{#each items}}
-          <li>{{this.value}}</li>
-        {{/each}}
-      </script>
-
-      <div id="finished">
-        <label>长期计划：</label>
-        <ul id="totalList">
-        </ul>
-        <input type="text" id="input"></input>
-        <button id="submit">提交</button>
-      </div>
-
     </div>
-
   </body>
 </html>

@@ -63,8 +63,8 @@ $(document).ready(function () {
     }
     dateModel.set(currentDate);
     renderDirectory();
-    renderReverse(totalModel, 'totalItem', $('#totalList'));
-    renderReverse(currentModel, 'currentItem', $('#currentList'));
+    renderReverse(totalModel, 'total-item', $('#total-list'));
+    renderReverse(currentModel, 'current-item', $('#current-list'));
   }
   renderInit();
 
@@ -186,7 +186,7 @@ $(document).ready(function () {
     var data = {items: items};
     var source = $('#template').html();
     var template = Handlebars.compile(source);
-    $('#currentList')[0].innerHTML = template(data);
+    $('#current-list')[0].innerHTML = template(data);
     e.stopPropagation();
   });
 
@@ -197,15 +197,15 @@ $(document).ready(function () {
       var total = totalModel.get();
       total.push(input);
       totalModel.set(total);
-      renderReverse(totalModel, 'totalItem', $('#totalList'));
+      renderReverse(totalModel, 'total-item', $('#total-list'));
     }
   });
 
   $('body').delegate('.nav', 'click', function(e) {
-    renderReverse(currentModel, 'currentItem', $('#currentList'));
+    renderReverse(currentModel, 'current-item', $('#current-list'));
   });
 
-  $('body').delegate('.totalItem', 'click', function(e) {
+  $('body').delegate('.total-item', 'click', function(e) {
     var node = $(e.target);
     var currentItem = {
       finished: false,
@@ -215,12 +215,12 @@ $(document).ready(function () {
     var total = totalModel.get();
     total.splice(parseInt(node.data('index')), 1);
     totalModel.set(total);
-    renderReverse(totalModel, 'totalItem', $('#totalList'));
+    renderReverse(totalModel, 'total-item', $('#total-list'));
 
     var current = currentModel.get();
     current.push(currentItem);
     currentModel.set(current);
-    renderReverse(currentModel, 'currentItem', $('#currentList'));
+    renderReverse(currentModel, 'current-item', $('#current-list'));
   });
 
   $('body').delegate('.checkbox', 'change', function(e) {
@@ -229,7 +229,7 @@ $(document).ready(function () {
 
     current[node.data('index')].finished = !!node.attr('checked');
     currentModel.set(current);
-    renderReverse(currentModel, 'currentItem', $('#currentList'));
+    renderReverse(currentModel, 'current-item', $('#current-list'));
   });
 
   $('#input').keydown(function(e) {

@@ -1,52 +1,8 @@
-html {
-  height: 95%;
-}
-
-body {
-  position: relative;
+html, body {
+  padding: 8px;
+  margin: 0;
   height: 100%;
-}
-
-#container {
-  height: 100%;
-  min-width: 831px;
-}
-
-#unfinished, #finished {
-  float: left;
-  width: 38%;
-  height: 96.2%;
-  padding: 10px;
-  border-style: solid;
-  border-width: 2px;
-  border-right-color: #CDB38B;
-  border-left-color: #CDB38B;
-  border-top-color: #CDB38B;
-  border-bottom-color: #CDB38B;
-}
-
-#currentList {
-  padding: 5px;
-  margin: 5px;
-  list-style-type: none;
-  width: 95%;
-  height: 93%;
   font-size: 14px;
-  overflow: auto;
-}
-
-#totalList {
-  padding: 5px;
-  margin: 5px;
-  list-style-type: none;
-  width: 95%;
-  height: 85%;
-  font-size: 14px;
-  overflow: auto;
-}
-
-.totalItem {
-  cursor: pointer;
 }
 
 label {
@@ -55,44 +11,31 @@ label {
   background-color: #CDB38B;
 }
 
-#input {
-  height: 25px;
-  width: 80%;
-  font-size: 15px;
-}
-
-button {
-  padding: 8px;
-  height: 32px;
-  width: 15%;
-  border-radius: 3px;
-  background-color: #CDB38B;
-  font-size: 13px;
-}
-
 li {
-  margin-top: 8px;
+  margin-top: 5px;
 }
 
-.add {
-  font-size: 14px;
-  color: #CDCDC1;
+input, button {
+  outline: none;
 }
 
+#container {
+  position: relative;
+  height: 100%;
+  min-width: 831px;
+}
+
+/*导航*/
 .nav {
   float: left;
-  width: 18%;
-  overflow: visible !important;
+  width: 200px;
   height: 100%;
+  font-weight: bold;
   background-color: #CDB38B;
 }
 
 .nav dt {
   padding-left: 20px;
-  background-repeat: no-repeat;
-  background-position: 10px center;
-  font-weight:bold;
-  font-size: 15px;
   line-height: 30px;
   cursor: pointer;
   color: #383838;
@@ -100,12 +43,73 @@ li {
 
 .nav dd {
   color: #191970;
-  font-weight:bold;
   line-height: 20px;
-  font-size: 14px;
   cursor: pointer;
 }
 
+/*任务列表*/
+.content {
+  position: absolute;
+  left: 200px;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  font-size: 0;
+}
+
+.plan-list {
+  position: relative;
+  overflow: hidden;
+  font-size: 14px;
+  display: inline-block;
+  box-sizing: border-box;
+  width: 50%;
+  height: 100%;
+  padding: 10px;
+  border: 2px solid #CDB38B;
+}
+
+.item-list {
+  padding: 5px;
+  margin: 5px;
+  height: calc(100% - 50px);
+  overflow: auto;
+  list-style-type: none;
+}
+
+#total-list {
+  height: calc(100% - 100px);
+}
+
+.total-item {
+  cursor: pointer;
+}
+
+/*输入*/
+.input-area {
+  position: absolute;
+  box-sizing: border-box;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 45px;
+  padding: 8px;
+}
+
+#input {
+  height: 22px;
+  width: 80%;
+}
+
+#submit {
+  height: 28px;
+  width: 15%;
+  border-radius: 3px;
+  background-color: #CDB38B;
+  vertical-align: bottom;
+}
+
+/*GitHub ribbon*/
 .github-ribbon {
   position: fixed;
   width: 150px;
