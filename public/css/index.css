@@ -1,8 +1,9 @@
 html, body {
-  padding: 8px;
+  padding: 4px;
   margin: 0;
   height: 100%;
   font-size: 14px;
+  box-sizing: border-box;
 }
 
 label {
@@ -28,7 +29,7 @@ input, button {
 /*导航*/
 .nav {
   float: left;
-  width: 200px;
+  width: 230px;
   height: 100%;
   font-weight: bold;
   background-color: #CDB38B;
@@ -50,7 +51,7 @@ input, button {
 /*任务列表*/
 .content {
   position: absolute;
-  left: 200px;
+  left: 230px;
   top: 0;
   right: 0;
   bottom: 0;
